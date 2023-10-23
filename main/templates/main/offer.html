@@ -1,0 +1,91 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+    <a href="{% url 'cart' %}" style="margin-left: 10px;text-decoration: none"><-Назад</a>
+    <div class="cart_app">
+        <h1>Оформление заказа</h1>
+        <div class="cart_content">
+            <div class="cart_content_detail">
+                {% if user.is_authenticated %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group" style="display: flex;flex-wrap: wrap">
+                            <div class="item_from_group" style="width: 100%;">
+                                <label for="region" style="margin-left: 2.2%">Регион / район*</label>
+                                <input id="region" name="region" type="text" class="form-control" placeholder="Введите регион" style="width: 90%" />
+                            </div>
+                            <div class="item_form_group" style="width: 45%">
+                                <label for="city" style="margin-left: 5%">Город / населенный пункт*</label>
+                                <input id="city" name="city" type="text" class="form-control" placeholder="Введите город" style="width: 95%" />
+                            </div>
+                            <div class="item_form_group" style="width: 45%">
+                                <label for="street" style="margin-left: 5%">Улица*</label>
+                                <input id="street" name="street" type="text" class="form-control" placeholder="Введите улицу" style="width: 100%"/>
+                            </div>
+                            <div class="item_form_group" style="width: 45%">
+                                <label for="house" style="margin-left: 5%">Дом*</label>
+                                <input id="house" name="house" type="text" class="form-control" placeholder="Введите дом" style="width: 95%"/>
+                            </div>
+                            <div class="item_form_group" style="width: 45%">
+                                <label style="margin-left: 5%">Номер телефона*</label>
+                                <input name="mobile" placeholder="Например, +79999999999" class="form-control" type="tel" style="width: 100%">
+                            </div>
+                        </div>
+                        <p>{{ error }}</p>
+                        <span class="cart_accordion_header_group_title" style="font-weight: bold;font-size: 18px;margin-left: 2%">Товары, {{ request.session.cart|length }} шт.</span>
+                        <div class="offer_items">
+                            {% for item in request.session.cart %}
+                                {% for sneaker in sneakers %}
+                                    {% if sneaker.id|stringformat:"i" == item.id %}
+                                        <div class="offer_card_item">
+                                            <img class="cart_item_img" src="{{ sneaker.img1.url }}">
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn btn-success" style="margin: auto 20px; width: 30%;font-weight: bold;background-color: #2c666e">ОПЛАТИТЬ</button>
+                    </form>
+                {% else %}
+                    <div class="reg_necessity">
+                        <h3>Авторизируйтесь для того, чтобы продолжить оформление заказа</h3>
+                        <a class="offer_btn_auth" href="{% url 'login' %}">Войти</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="cart_content_total">
+                <div class="cart_content_total_summary">
+                    <div class="cart_total_info">
+                        <div class="cart_summary">
+                            <span class="cart_summary_title">Ваш заказ</span>
+                            <div class="cart_summary_line">
+                                <span class="cart_summary_line_title">Товары, {{ request.session.cart|length }} шт.</span>
+                                <span class="cart_summary_amount">{{ total }}₽</span>
+                            </div>
+                            <div class="cart_summary_line">
+                                <span class="cart_summary_line_title">Акции и скидки</span>
+                                <span class="cart_summary_amount">0₽</span>
+                            </div>
+                            <div class="cart_summary_line" style="margin-top: 10px">
+                                <span class="cart_summary_line_title" style="font-size: 18px; font-weight: bold">Итого</span>
+                                <span class="cart_summary_amount" style="font-size: 18px">{{ total }}₽</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if request.session.cart|length == 0 %}
+                    {% else %}
+                        <div class="cart_total_offer_btn">
+
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/js/jquery.suggestions.min.js"></script>
+    <script src="{% static 'main/js/autocompete.js' %}"></script>
+{% endblock %}

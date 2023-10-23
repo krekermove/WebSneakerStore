@@ -1,0 +1,87 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+    <div class="cart_app">
+        <h1>Корзина</h1>
+        <div class="cart_content">
+            <div class="cart_content_detail">
+                <div class="cart_item_list">
+                    <div class="cart_accordion">
+                        <div class="cart_accordion_header">
+                            <div class="cart_accordion_header_group">
+                                <span class="cart_accordion_header_group_title">Товары, {{ request.session.cart|length }} шт.</span>
+                                <div class="cart_item_delete">
+                                    <form action="{% url 'cart:delete' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                                        <button class="cart_link" type="submit">Удалить все</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% for item in request.session.cart %}
+                            {% for sneaker in sneakers %}
+                                {% if sneaker.id|stringformat:"i" == item.id %}
+                                    <div class="cart_group_item">
+                                        <div class="cart_item">
+                                            <a class="cart_item_img" href="/sneakers/{{ sneaker.slug }}">
+                                                <img style="align-content: center" src={{ sneaker.img1.url }}>
+                                            </a>
+                                            <a class="cart_item_title" href="/sneakers/{{ sneaker.slug }}">
+                                                <h7 style="margin-left: 10px">{{ sneaker.name }}</h7>
+                                            </a>
+                                            <div class="cart_item_size">
+                                                <h7>Размер: {{ item.size }}</h7>
+                                            </div>
+                                            <div class="cart_item_cost">
+                                                <h7>{{ sneaker.cost }}₽</h7>
+                                            </div>
+                                            <form class="cart_form_delete" action="{% url 'cart:remove_from_cart' id=sneaker.id %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="url_from" value="{{ request.path }}">
+                                                <input type="hidden" name="size" value="{{ item.size }}">
+                                                <button class="cart_item_delete_btn" type="submit">
+                                                    <img class="cart_delete_ico" src="{% static 'main/img/delete.png' %}">
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="cart_content_total">
+                <div class="cart_content_total_summary">
+                    <div class="cart_total_info">
+                        <div class="cart_summary">
+                            <span class="cart_summary_title">Ваш заказ</span>
+                            <div class="cart_summary_line">
+                                <span class="cart_summary_line_title">Товары, {{ request.session.cart|length }} шт.</span>
+                                <span class="cart_summary_amount">{{ total }}₽</span>
+                            </div>
+                            <div class="cart_summary_line">
+                                <span class="cart_summary_line_title">Акции и скидки</span>
+                                <span class="cart_summary_amount">0₽</span>
+                            </div>
+                            <div class="cart_summary_line" style="margin-top: 10px">
+                                <span class="cart_summary_line_title" style="font-size: 18px; font-weight: bold">Итого</span>
+                                <span class="cart_summary_amount" style="font-size: 18px">{{ total }}₽</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if request.session.cart|length == 0 %}
+                    {% else %}
+                        <div class="cart_total_offer_btn">
+                            <a class="cart_btn_to_offer" href="{% url 'offer' %}">ПЕРЕЙТИ К ОФОРМЛЕНИЮ</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

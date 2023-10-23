@@ -1,0 +1,102 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}{{ sneaker.name }}{% endblock %}
+
+{% block content %}
+    <div class="sneaker">
+        <div class="sneaker_row">
+            <div class="slideshow-container">
+                <div class="mySlides fade">
+                    <img style="width: 100%; align-content: center" src={{ sneaker.img1.url }}>
+                </div>
+                <div class="mySlides fade">
+                    <img style="width: 100%; align-content: center" src={{ sneaker.img2.url }}>
+                </div>
+                <div class="mySlides fade">
+                    <img style="width: 100%; align-content: center" src={{ sneaker.img3.url }}>
+                </div>
+                <a class="prev" onclick="plusSlides(-1)">&#10094</a>
+                <a class="next" onclick="plusSlides(1)">&#10095</a>
+                <br>
+                <div style="text-align: center">
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                </div>
+            </div>
+            <div class="sneaker_data_row">
+                <div class="sneaker_data">
+                    <h1>{{ sneaker.name }}</h1>
+                    <h3>RUB {{ sneaker.cost }}</h3>
+                    <p>Выберите размер:</p>
+                    <form action="{% url 'cart:add_to_cart' id=sneaker.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="sneaker_sizes">
+                            <input type="hidden" name="size" value="1">
+                            <input type="hidden" name="cost" value="{{ sneaker.cost }}">
+                            {% if sneaker.stock38 > 0 %}
+                                <div class="sneaker_sizes_item" onclick="sizeBtn(this)" disabled="disabled">
+                                    <span class="size_btn">38</span>
+                                </div>
+                            {% else %}
+                                <div class="sneaker_sizes_item disabled" onclick="sizeBtn(this)" disabled="disabled">
+                                    <span class="size_btn">38</span>
+                                </div>
+                            {% endif %}
+                            {% if sneaker.stock39 > 0 %}
+                                <div class="sneaker_sizes_item" onclick="sizeBtn(this)">
+                                    <span class="size_btn">39</span>
+                                </div>
+                            {% else %}
+                                <div class="sneaker_sizes_item disabled" onclick="sizeBtn(this)">
+                                    <span class="size_btn">39</span>
+                                </div>
+                            {% endif %}
+                            {% if sneaker.stock40 > 0 %}
+                                <div class="sneaker_sizes_item" onclick="sizeBtn(this)">
+                                    <span class="size_btn">40</span>
+                                </div>
+                            {% else %}
+                                <div class="sneaker_sizes_item disabled" onclick="sizeBtn(this)">
+                                    <span class="size_btn">40</span>
+                                </div>
+                            {% endif %}
+                            {% if sneaker.stock41 > 0 %}
+                                <div class="sneaker_sizes_item" onclick="sizeBtn(this)">
+                                    <span class="size_btn">41</span>
+                                </div>
+                            {% else %}
+                                <div class="sneaker_sizes_item disabled" onclick="sizeBtn(this)">
+                                    <span class="size_btn">41</span>
+                                </div>
+                            {% endif %}
+                            {% if sneaker.stock42 > 0 %}
+                                <div class="sneaker_sizes_item" onclick="sizeBtn(this)">
+                                    <span class="size_btn">42</span>
+                                </div>
+                            {% else %}
+                                <div class="sneaker_sizes_item disabled" onclick="sizeBtn(this)">
+                                    <span class="size_btn">42</span>
+                                </div>
+                            {% endif %}
+                            {% if sneaker.stock43  > 0 %}
+                                <div class="sneaker_sizes_item" onclick="sizeBtn(this)">
+                                    <span class="size_btn">43</span>
+                                </div>
+                            {% else %}
+                                <div class="sneaker_sizes_item disabled" onclick="sizeBtn(this)">
+                                    <span class="size_btn">43</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                        <button onclick="saveSize()" class="btn btn-success" type="submit">В корзину</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'main/js/slider.js' %}" defer></script>
+    <script src="{% static 'main/js/sizebtns.js' %}" defer></script>
+{% endblock %}
